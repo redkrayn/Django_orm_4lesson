@@ -32,13 +32,17 @@ def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
 
     for pokemon_entity in PokemonEntity.objects.all():
-        if pokemon_entity.disappeared_at > django.utils.timezone.localtime() > pokemon_entity.appeared_at:
-            add_pokemon(
-                folium_map,
-                pokemon_entity.lat,
-                pokemon_entity.lon,
-                request.build_absolute_uri(pokemon_entity.pokemon.photo.url) if pokemon_entity.pokemon.photo else None
-            )
+        try:
+            if pokemon_entity.disappeared_at > django.utils.timezone.localtime() > pokemon_entity.appeared_at:
+                add_pokemon(
+                    folium_map,
+                    pokemon_entity.lat,
+                    pokemon_entity.lon,
+                    request.build_absolute_uri(pokemon_entity.pokemon.photo.url) if pokemon_entity.pokemon.photo
+                    else None
+                )
+        except TypeError:
+            continue
 
     pokemons_on_page = []
 

@@ -22,15 +22,19 @@ class Pokemon(models.Model):
 
 class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(Pokemon, related_name='entities', on_delete=models.CASCADE, verbose_name='Покемон')
-    lat = models.FloatField(verbose_name='Широта')
-    lon = models.FloatField(verbose_name='Долгота')
+    lat = models.FloatField(verbose_name='Широта', null=True, blank=True)
+    lon = models.FloatField(verbose_name='Долгота', null=True, blank=True)
     appeared_at = models.DateTimeField(
         default=datetime.datetime.now(),
-        verbose_name='Дата появления покемона'
+        verbose_name='Дата появления покемона',
+        null=True,
+        blank=True
     )
     disappeared_at = models.DateTimeField(
         default=datetime.datetime.now() + datetime.timedelta(days=7),
-        verbose_name='Дата исчезновения покемона'
+        verbose_name='Дата исчезновения покемона',
+        null=True,
+        blank=True
     )
     level = models.PositiveSmallIntegerField(default=20, verbose_name='Уровень', null=True, blank=True)
     health = models.PositiveSmallIntegerField(default=20, verbose_name='Здоровье', null=True, blank=True)
