@@ -1,6 +1,7 @@
 import django
 import folium
 
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
@@ -34,8 +35,8 @@ def show_all_pokemons(request):
         if pokemon_entity.disappeared_at > django.utils.timezone.localtime() > pokemon_entity.appeared_at:
             add_pokemon(
                 folium_map,
-                pokemon_entity.Lat,
-                pokemon_entity.Lon,
+                pokemon_entity.lat,
+                pokemon_entity.lon,
                 request.build_absolute_uri(pokemon_entity.pokemon.photo.url) if pokemon_entity.pokemon.photo else None
             )
 
@@ -67,7 +68,7 @@ def show_pokemon(request, pokemon_id):
     else:
         previous_evolution = None
 
-    next_evolution = pokemon.back_evolution.all()
+    next_evolution = pokemon.back.all()
 
     if next_evolution.exists():
         for pokemon_evolution in next_evolution:
@@ -91,7 +92,7 @@ def show_pokemon(request, pokemon_id):
     }
 
     try:
-        requested_pokemon = Pokemon.objects.get(id=int(pokemon_id))
+        requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
     except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
@@ -100,8 +101,8 @@ def show_pokemon(request, pokemon_id):
     for pokemon_entity in requested_pokemon.entities.all():
         add_pokemon(
             folium_map,
-            pokemon_entity.Lat,
-            pokemon_entity.Lon,
+            pokemon_entity.lat,
+            pokemon_entity.lon,
             request.build_absolute_uri(pokemon_entity.pokemon.photo.url) if pokemon_entity.pokemon.photo else None
         )
     return render(request, 'pokemon.html', context={
