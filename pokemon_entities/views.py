@@ -72,7 +72,7 @@ def show_pokemon(request, pokemon_id):
     else:
         previous_evolution = None
 
-    next_evolution = pokemon.back.all()
+    next_evolution = pokemon.next.all()
 
     if next_evolution.exists():
         for pokemon_evolution in next_evolution:
@@ -95,10 +95,7 @@ def show_pokemon(request, pokemon_id):
         'next_evolution': evolutions_list
     }
 
-    try:
-        requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
-    except Pokemon.DoesNotExist:
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+    requested_pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
 
