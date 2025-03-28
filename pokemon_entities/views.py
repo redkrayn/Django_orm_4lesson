@@ -60,10 +60,10 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    pokemon = Pokemon.objects.get(id=int(pokemon_id))
+    pokemon = get_object_or_404(Pokemon, id=int(pokemon_id))
 
     if pokemon.previous_evolution:
-        back_evolution = Pokemon.objects.get(title=pokemon.previous_evolution)
+        back_evolution = pokemon.previous_evolution
         previous_evolution = {
             'pokemon_id': back_evolution.id,
             'img_url': request.build_absolute_uri(back_evolution.photo.url) if back_evolution.photo else None,
@@ -72,7 +72,7 @@ def show_pokemon(request, pokemon_id):
     else:
         previous_evolution = None
 
-    next_evolution = pokemon.next.all()
+    next_evolution = pokemon.evolution.all()
 
     if next_evolution.exists():
         for pokemon_evolution in next_evolution:
