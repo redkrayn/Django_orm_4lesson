@@ -72,7 +72,7 @@ def show_pokemon(request, pokemon_id):
     else:
         previous_evolution = None
 
-    next_evolution = pokemon.evolution.all()
+    next_evolution = pokemon.next_evolution.all()
 
     if next_evolution.exists():
         for pokemon_evolution in next_evolution:
